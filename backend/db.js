@@ -1,26 +1,19 @@
-const sql = require("mssql");
-require("dotenv").config();
+const sql = require('mssql');
 
-const dbConfig = {
-  server: process.env.DB_SERVER,
-  database: process.env.DB_NAME,
+const config = {
+  server: 'LAPTOP-2P63RQCI',  // For default instance, use localhost
+  database: process.env.DB_NAME,  // Your database name from .env
   options: {
-    encrypt: true,
-    trustServerCertificate: true,
+    encrypt: true,  // Enable encryption if needed
+    trustServerCertificate: true,  // Accept self-signed certificates if necessary
   },
   authentication: {
-    type: "default"
-  }
+    type: 'default',  // Windows Authentication
+  },
 };
 
-const poolPromise = new sql.ConnectionPool(dbConfig)
-  .connect()
-  .then(pool => {
-    console.log("Connected to MSSQL using Windows Authentication");
-    return pool;
-  })
-  .catch(err => console.error("Database Connection Failed:", err));
-
-module.exports = {
-  sql, poolPromise
-};
+sql.connect(config).then(() => {
+  console.log('Connected successfully!');
+}).catch((err) => {
+  console.error('Error connecting to database:', err);
+});
